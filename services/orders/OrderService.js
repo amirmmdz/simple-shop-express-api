@@ -7,6 +7,17 @@ class OrderService extends BaseCrudService {
     constructor(){
         super(Order);
     }
+    async userOrders(userId) {
+        try {
+            const record = await this.model.where({ userId: userId });
+            if (!record) {
+                return null;
+            }
+            return record;
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 module.exports = OrderService;

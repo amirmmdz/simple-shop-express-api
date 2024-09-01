@@ -15,7 +15,7 @@ router.get('/user-oders', authMiddleware, async function (req, res, next) {
         if (!user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        const orders = await new OrderService().whereWithDetails({ userId: user._id })
+        const orders = await new OrderService().userOrders(user._id)
         return res.json({
             'data': orders
         });
@@ -37,7 +37,10 @@ router.get('/user-oders/:id', authMiddleware, async function (req, res, next) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
         const orderId = req.params.id;
-        const order = await new OrderService().whereWithDetails({ userId: user._id, _id: orderId });
+        const order = await new OrderService().where({ userId: user._id, _id: orderId });
+        if (!order) {
+            return res.status(404).json({ message: 'Not found' });
+        }
         return res.json({
             'data': order
         });
